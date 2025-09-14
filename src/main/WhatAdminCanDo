@@ -1,0 +1,327 @@
+تمام ✅ خليني أديك قائمة شاملة بكل الـ abilities والـ endpoints اللي الـ **Admin** يقدر يستخدمها عندك من خلال الـ `MovieController` (والـ SecurityConfig).
+
+---
+
+# 👨‍💼 Admin Abilities
+
+### 1️⃣ إدارة الأفلام (CRUD كامل)
+
+* **Get All Movies**
+
+  ```
+  GET /api/movies
+  ```
+
+  يجيب كل الأفلام (مع pagination).
+  (مسموح لـ User + Admin).
+
+* **Get Movie By ID**
+
+  ```
+  GET /api/movies/{id}
+  ```
+
+  يجيب فيلم واحد بالـ ID.
+  (مسموح لـ User + Admin).
+
+* **Search Movies in DB**
+
+  ```
+  GET /api/movies/search?query={text}
+  ```
+
+  يدور على فيلم في قاعدة البيانات المحلية.
+  (مسموح لـ User + Admin).
+
+* **Search Movies in OMDB API** 🔒
+
+  ```
+  GET /api/movies/search-omdb?query={text}
+  ```
+
+  يعمل Search مباشر في OMDb API (ويتخزن عندك بعد كده).
+  (Admin فقط).
+
+* **Add Single Movie** 🔒
+
+  ```
+  POST /api/movies
+  ```
+
+  يضيف فيلم جديد في قاعدة البيانات.
+  (Admin فقط).
+
+* **Add Batch Movies** 🔒
+
+  ```
+  POST /api/movies/batch
+  ```
+
+  يضيف مجموعة أفلام مرة واحدة (List<Movie>).
+  (Admin فقط).
+
+* **Update Movie** 🔒
+
+  ```
+  PUT /api/movies/{id}
+  ```
+
+  يعدل بيانات فيلم معين.
+  (Admin فقط).
+
+* **Delete Movie** 🔒
+
+  ```
+  DELETE /api/movies/{id}
+  ```
+
+  يمسح فيلم من قاعدة البيانات.
+  (Admin فقط).
+
+* **Delete Batch of Movies** 🔒
+
+  ```
+  POST /api/movies/delete-batch
+  ```
+
+  يمسح مجموعة أفلام مرة واحدة (List<Long> ids).
+  (Admin فقط).
+
+---
+
+### 2️⃣ إدارة الـ Ratings (من SecurityConfig)
+
+* ```
+  /api/ratings/**
+  ```
+
+  أي عمليات على التقييمات (GET, POST, PUT, DELETE) → مسموح لأي مستخدم Authenticated (يعني User/Admin).
+  لكن كـ Admin برضه يقدر يدخل عليها.
+
+---
+
+### 3️⃣ إدارة الـ Users (من SecurityConfig)
+
+* ```
+  /api/users/**
+  ```
+
+  الـ Admin فقط يقدر يدخل ويعمل أي عمليات على الـ users.
+
+---
+
+### 4️⃣ Endpoints مفتوحة للجميع
+
+* ```
+  /auth/**
+  ```
+
+  للتسجيل (register) أو تسجيل الدخول (login).
+  دي مسموحة بدون Authentication.
+
+---
+
+# 📝 ملخص الأدوار
+
+* **USER** → يقدر يعمل:
+
+  * GET all movies
+  * GET movie by ID
+  * Search in DB
+  * GET/POST/PUT/DELETE on `/api/ratings/**` (عشان يضيف تقييم مثلاً).
+
+* **ADMIN** → يقدر يعمل:
+
+  * كل اللي الـ USER يقدر يعمله
+  * * Search OMDB
+  * * Add/Batch Add
+  * * Update
+  * * Delete/Batch Delete
+  * * إدارة الـ Users
+
+---
+
+تحب أعملك جدول مرتب (زي Matrix) فيه: Endpoint | Method | Role (User/Admin) عشان يبقى مرجع جاهز ليك؟
+
+
+تمام 👌 خليني أشرحلك واحدة واحدة إزاي تستخدم الـ **MovieController** ده في Postman.
+
+---
+
+## 1️⃣ Base URL
+
+كل الـ endpoints موجودة تحت:
+
+```
+http://localhost:8080/api/movies
+```
+
+(غير البورت لو إنت مشغل السيرفر على غير 8080).
+
+---
+
+## 2️⃣ Authentication
+
+بما إن عندك **Spring Security**، فلازم تدخل إما:
+
+* **admin/admin** → معاه Role: ADMIN
+* **user/user** → معاه Role: USER
+
+⬅️ في Postman:
+
+* ادخل على **Authorization tab**
+* اختار **Basic Auth**
+* وحط الـ username/password.
+
+---
+
+## 3️⃣ Requests المتاحة
+
+### 📌 (Accessible by ADMIN + USER)
+
+#### ✅ Get All Movies
+
+```
+GET http://localhost:8080/api/movies
+```
+
+#### ✅ Get Movie By ID
+
+```
+GET http://localhost:8080/api/movies/{id}
+مثال: http://localhost:8080/api/movies/1
+```
+
+#### ✅ Search Movies in DB
+
+```
+GET http://localhost:8080/api/movies/search?query=batman
+```
+
+---
+
+### 📌 (ADMIN Only)
+
+#### 🔒 Search in OMDB API
+
+```
+GET http://localhost:8080/api/movies/search-omdb?query=inception
+```
+
+#### 🔒 Add a Movie
+
+```
+POST http://localhost:8080/api/movies
+```
+
+**Body (JSON):**
+
+```json
+{
+  "title": "Inception",
+  "year": "2010",
+  "imdbId": "tt1375666",
+  "type": "movie",
+  "posterUrl": "https://imageurl.com/inception.jpg"
+}
+```
+
+#### 🔒 Add Batch of Movies
+
+```
+POST http://localhost:8080/api/movies/batch
+```
+
+**Body (JSON):**
+
+```json
+[
+  {
+    "title": "Interstellar",
+    "year": "2014",
+    "imdbId": "tt0816692",
+    "type": "movie",
+    "posterUrl": "https://imageurl.com/interstellar.jpg"
+  },
+  {
+    "title": "The Dark Knight",
+    "year": "2008",
+    "imdbId": "tt0468569",
+    "type": "movie",
+    "posterUrl": "https://imageurl.com/darkknight.jpg"
+  }
+]
+```
+
+#### 🔒 Update a Movie
+
+```
+PUT http://localhost:8080/api/movies/{id}
+مثال: http://localhost:8080/api/movies/1
+```
+
+**Body (JSON):**
+
+```json
+{
+  "title": "Inception - Updated",
+  "year": "2010",
+  "imdbId": "tt1375666",
+  "type": "movie",
+  "posterUrl": "https://imageurl.com/inception_new.jpg"
+}
+```
+
+#### 🔒 Delete a Movie
+
+```
+DELETE http://localhost:8080/api/movies/{id}
+مثال: http://localhost:8080/api/movies/1
+```
+
+#### 🔒 Delete Batch
+
+```
+POST http://localhost:8080/api/movies/delete-batch
+```
+
+**Body (JSON):**
+
+```json
+[1, 2, 3]
+```
+
+---
+
+## 4️⃣ ملاحظات
+
+* **USER account** يقدر يعمل بس GET (list, byId, searchDb).
+* **ADMIN account** يقدر يعمل CRUD كامل + searchOmdb.
+* لو جالك **403 Forbidden** → غالبًا إنت داخل بـ user/user بتحاول تعمل عملية ADMIN.
+* لو جالك **401 Unauthorized** → إما مانزلتش الـ Auth في Postman صح أو الـ credentials غلط.
+
+---
+
+تحب أكتبلك **ملف Postman Collection جاهز** (تستورده مباشرة وتلاقي كل الـ requests متجهزة)؟
+
+
+
+---
+
+# 📝 ملخص الأدوار
+
+* **USER** → يقدر يعمل:
+
+  * GET all movies
+  * GET movie by ID
+  * Search in DB
+  * GET/POST/PUT/DELETE on `/api/ratings/**` (عشان يضيف تقييم مثلاً).
+
+* **ADMIN** → يقدر يعمل:
+
+  * كل اللي الـ USER يقدر يعمله
+  * * Search OMDB
+  * * Add/Batch Add
+  * * Update
+  * * Delete/Batch Delete
+  * * إدارة الـ Users

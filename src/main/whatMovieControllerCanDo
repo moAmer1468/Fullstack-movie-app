@@ -1,0 +1,12 @@
+| HTTP Method | Endpoint                            | Auth Role    | شرح الوظيفة                                                                    |
+| ----------- | ----------------------------------- | ------------ | ------------------------------------------------------------------------------ |
+| **GET**     | `/api/movies`                       | USER / ADMIN | يرجع **كل الأفلام** اللي موجودة في الـ Database (مع Pagination).               |
+| **GET**     | `/api/movies/{id}`                  | USER / ADMIN | يرجع فيلم واحد حسب الـ `id` بتاعه.                                             |
+| **GET**     | `/api/movies/search?query=...`      | USER / ADMIN | يعمل بحث في الـ Database بالأفلام اللي عناوينها فيها الكلمة المدخلة.           |
+| **GET**     | `/api/movies/search-omdb?query=...` | ADMIN        | يعمل بحث في **OMDB API** ويرجع النتائج (لكن مش بيخزنهم في DB).                 |
+| **POST**    | `/api/movies`                       | ADMIN        | يضيف فيلم جديد للـ Database.                                                   |
+| **POST**    | `/api/movies/batch`                 | ADMIN        | يضيف **مجموعة أفلام مرة واحدة** للـ Database.                                  |
+| **PUT**     | `/api/movies/{id}`                  | ADMIN        | يعدل بيانات فيلم موجود بالـ `id`.                                              |
+| **DELETE**  | `/api/movies/{id}`                  | ADMIN        | يمسح فيلم معين من الـ Database بالـ `id`.                                      |
+| **POST**    | `/api/movies/delete-batch`          | ADMIN        | يمسح **مجموعة أفلام مرة واحدة** (بإرسال list من الـ IDs).                      |
+| **POST**    | `/api/movies/fetch?query=...`       | ADMIN        | يعمل Fetch من **OMDB API** للأفلام اللي بتطابق البحث، ويخزنهم في الـ Database. |
