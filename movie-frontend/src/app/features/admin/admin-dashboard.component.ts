@@ -18,7 +18,7 @@ import { Movie, MovieService } from '../../core/movie.service';
 
     <div class="grid" *ngIf="omdbResults().length">
       <div class="card" *ngFor="let m of omdbResults()">
-        <img [src]="m.poster || ''" alt="poster" />
+        <img [src]="m.posterUrl || ''" alt="poster" />
         <div class="meta">
           <div class="title">{{ m.title }} ({{ m.year }})</div>
           <button (click)="add(m)">Add</button>
@@ -33,7 +33,7 @@ import { Movie, MovieService } from '../../core/movie.service';
     <div class="grid">
       <div class="card" *ngFor="let m of dbMovies()">
         <input type="checkbox" [checked]="selectedIds().includes(m.id!)" (change)="toggleSelect(m.id!)" />
-        <img [src]="m.poster || ''" alt="poster" />
+        <img [src]="m.posterUrl || ''" alt="poster" />
         <div class="meta">
           <div class="title">{{ m.title }} ({{ m.year }})</div>
           <button (click)="remove(m.id!)">Remove</button>

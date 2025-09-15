@@ -15,7 +15,7 @@ import { Movie, MovieService } from '../../core/movie.service';
     </div>
     <div class="grid">
       <a class="card" *ngFor="let m of movies()" [routerLink]="['/movies', m.id]">
-        <img [src]="m.poster || ''" alt="poster" />
+        <img [src]="m.posterUrl || ''" alt="poster" />
         <div class="meta">
           <div class="title">{{ m.title }} ({{ m.year }})</div>
         </div>

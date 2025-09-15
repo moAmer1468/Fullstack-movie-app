@@ -1,1 +1,87 @@
-/* You can add global styles to this file, and also import other style files */
+/* Global Theme */
+:root{
+  --bg: #0f172a;            /* slate-900 */
+  --surface: #111827;       /* gray-900 */
+  --surface-2: #1f2937;     /* gray-800 */
+  --text: #e5e7eb;          /* gray-200 */
+  --muted: #94a3b8;         /* slate-400 */
+  --primary: #7c3aed;       /* violet-600 */
+  --primary-700: #6d28d9;   /* violet-700 */
+  --accent: #10b981;        /* emerald-500 */
+  --danger: #ef4444;        /* red-500 */
+  --card-border: rgba(255,255,255,0.08);
+  --shadow: 0 6px 20px rgba(0,0,0,0.25);
+}
+
+html, body { height: 100%; }
+body{
+  margin:0;
+  background: linear-gradient(180deg, var(--bg) 0%, #0b1220 100%);
+  color: var(--text);
+  font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, 'Helvetica Neue', Arial, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+}
+
+/* Navbar */
+nav{
+  background: linear-gradient(90deg, var(--surface) 0%, var(--surface-2) 100%);
+  box-shadow: var(--shadow);
+}
+nav a{
+  color: var(--text);
+  padding: 8px 10px;
+  border-radius: 6px;
+  transition: background .2s ease, color .2s ease;
+}
+nav a.active, nav a:hover{ background: rgba(124, 58, 237, 0.18); color: #fff; }
+nav button{
+  background: var(--primary);
+  color: #fff;
+  border: 0;
+  padding: 8px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background .2s ease, transform .05s ease;
+}
+nav button:hover{ background: var(--primary-700); }
+nav button:active{ transform: translateY(1px); }
+
+/* Cards and grids (shared look) */
+.grid{ padding: 16px; }
+.card{
+  background: linear-gradient(180deg, rgba(255,255,255,0.06), rgba(255,255,255,0.03));
+  border: 1px solid var(--card-border) !important;
+  border-radius: 12px !important;
+  box-shadow: var(--shadow);
+}
+.card img{ background: #0a0f1d !important; }
+.title{ color: #fff !important; }
+
+/* Buttons */
+button{
+  background: var(--primary);
+  color:#fff;
+  border:0;
+  padding:8px 12px;
+  border-radius:8px;
+  cursor:pointer;
+  transition: background .2s ease, transform .05s ease;
+}
+button:hover{ background: var(--primary-700); }
+button:disabled{ opacity: .6; cursor: not-allowed; }
+
+/* Inputs */
+input, select{
+  background: var(--surface-2);
+  color: var(--text);
+  border: 1px solid var(--card-border);
+  padding: 8px 10px;
+  border-radius: 8px;
+  outline: none;
+}
+input::placeholder{ color: var(--muted); }
+
+/* Error */
+.error{ color: var(--danger) !important; }
+
+/* Headings */
+h3{ padding: 0 16px; color: var(--accent); }

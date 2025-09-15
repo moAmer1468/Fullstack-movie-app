@@ -11,7 +11,7 @@ import { RatingService } from '../../core/rating.service';
   imports: [CommonModule, FormsModule],
   template: `
     <div *ngIf="movie() as m" class="detail">
-      <img [src]="m.poster || ''" alt="poster" />
+      <img [src]="m.posterUrl || ''" alt="poster" />
       <div class="info">
         <h2>{{ m.title }} ({{ m.year }})</h2>
         <p>{{ m.plot }}</p>

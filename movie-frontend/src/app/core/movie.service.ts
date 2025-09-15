@@ -8,8 +8,9 @@ export interface Movie {
   title: string;
   year?: string;
   imdbId?: string;
-  poster?: string;
+  posterUrl?: string;
   plot?: string;
+  type?: string;
 }
 
 export interface Page<T> {
