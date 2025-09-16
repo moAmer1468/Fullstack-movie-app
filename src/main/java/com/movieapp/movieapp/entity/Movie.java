@@ -27,4 +27,12 @@ public class Movie {
     private String type;
 
     private String posterUrl;
+    
+    private String genre;
+    
+    private String director;
+    
+    private String actors;
+    
+    private String plot;
 }

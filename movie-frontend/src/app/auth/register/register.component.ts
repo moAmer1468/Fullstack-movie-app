@@ -1,19 +1,19 @@
 import { Component, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '../../core/auth.service';
 
 @Component({
-  selector: 'app-login',
+  selector: 'app-register',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, RouterLink],
   template: `
     <div class="login-container">
       <div class="login-card">
         <div class="login-header">
           <h1>MovieApp</h1>
-          <p>Sign in to your account</p>
+          <p>Create a new account</p>
         </div>
         <form (ngSubmit)="onSubmit()" #f="ngForm" class="login-form">
           <div class="form-group">
@@ -23,7 +23,7 @@ import { AuthService } from '../../core/auth.service';
               [(ngModel)]="username" 
               name="username" 
               type="text"
-              placeholder="Enter your username"
+              placeholder="Choose a username"
               required 
             />
           </div>
@@ -34,22 +34,20 @@ import { AuthService } from '../../core/auth.service';
               [(ngModel)]="password" 
               name="password" 
               type="password"
-              placeholder="Enter your password"
+              placeholder="Choose a password"
               required 
             />
           </div>
           <button type="submit" class="login-btn" [disabled]="loading()">
-            <span *ngIf="!loading()">Login</span>
-            <span *ngIf="loading()">Signing in...</span>
+            <span *ngIf="!loading()">Register</span>
+            <span *ngIf="loading()">Creating account...</span>
           </button>
           <div class="error-message" *ngIf="error()">
             {{ error() }}
           </div>
         </form>
         <div class="login-footer">
-          <p>Demo accounts:</p>
-          <p><strong>Admin:</strong> admin / admin</p>
-          <p><strong>User:</strong> user / user</p>
+          <p>Already have an account? <a routerLink="/login">Sign in</a></p>
         </div>
       </div>
     </div>
@@ -119,51 +117,40 @@ import { AuthService } from '../../core/auth.service';
       padding: 12px 16px;
       color: #fff;
       font-size: 1rem;
-      transition: all 0.3s ease;
-    }
-    
-    .form-group input:focus {
-      outline: none;
-      border-color: #7c3aed;
-      background: rgba(255, 255, 255, 0.15);
-      box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.2);
     }
     
     .form-group input::placeholder {
-      color: rgba(255, 255, 255, 0.6);
+      color: rgba(255, 255, 255, 0.5);
     }
     
     .login-btn {
-      background: linear-gradient(135deg, #7c3aed 0%, #6d28d9 100%);
-      color: #fff;
+      background: linear-gradient(to right, #4776E6, #8E54E9);
       border: none;
       border-radius: 10px;
       padding: 14px;
-      font-size: 1.1rem;
+      color: white;
       font-weight: 600;
       cursor: pointer;
-      transition: all 0.3s ease;
+      transition: all 0.2s ease;
       margin-top: 10px;
     }
     
-    .login-btn:hover:not(:disabled) {
+    .login-btn:hover {
       transform: translateY(-2px);
-      box-shadow: 0 6px 20px rgba(124, 58, 237, 0.4);
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
     }
     
     .login-btn:disabled {
-      opacity: 0.7;
+      background: #ccc;
       cursor: not-allowed;
       transform: none;
+      box-shadow: none;
     }
     
     .error-message {
-      background: rgba(239, 68, 68, 0.2);
-      border: 1px solid rgba(239, 68, 68, 0.4);
-      color: #fca5a5;
-      padding: 12px;
-      border-radius: 8px;
+      color: #ff6b6b;
       text-align: center;
+      margin-top: 15px;
       font-size: 0.9rem;
     }
     
@@ -174,16 +161,20 @@ import { AuthService } from '../../core/auth.service';
       font-size: 0.9rem;
     }
     
-    .login-footer p {
-      margin: 5px 0;
+    .login-footer a {
+      color: #fff;
+      text-decoration: underline;
+      font-weight: 500;
     }
     
-    .login-footer strong {
-      color: #fff;
+    @media (max-width: 480px) {
+      .login-card {
+        padding: 30px 20px;
+      }
     }
   `]
 })
-export class LoginComponent {
+export class RegisterComponent {
   private readonly auth = inject(AuthService);
   private readonly router = inject(Router);
 
@@ -195,19 +186,17 @@ export class LoginComponent {
   onSubmit() {
     this.error.set(null);
     this.loading.set(true);
-    this.auth.login(this.username, this.password).subscribe({
-      next: (role) => {
+    this.auth.register(this.username, this.password).subscribe({
+      next: () => {
         this.loading.set(false);
-        if (role === 'ADMIN') this.router.navigate(['/admin/dashboard']);
-        else this.router.navigate(['/user/dashboard']);
+        this.router.navigate(['/login'], { 
+          queryParams: { registered: 'true' } 
+        });
       },
-      error: () => {
+      error: (err) => {
         this.loading.set(false);
-        this.error.set('Invalid username or password');
+        this.error.set(err.error?.message || 'Registration failed. Please try again.');
       }
     });
   }
 }
-
-
-
