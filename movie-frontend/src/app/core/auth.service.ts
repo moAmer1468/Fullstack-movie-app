@@ -65,6 +65,10 @@ export class AuthService {
     return this.http.get<{totalUsers: number}>(`${environment.apiBaseUrl}/auth/stats`);
   }
 
+  getUserRole(): UserRole {
+    return this.role();
+  }
+
   private hasToken(): boolean {
     if (!this.isBrowser) return false;
     return !!localStorage.getItem(this.tokenKey);
