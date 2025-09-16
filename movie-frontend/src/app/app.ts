@@ -1,27 +1,20 @@
 import { Component, inject, signal } from '@angular/core';
-import { RouterLink, RouterOutlet } from '@angular/router';
-import { NgIf } from '@angular/common';
-import { AuthService } from './core/auth.service';
+import { RouterOutlet } from '@angular/router';
+import { NavbarComponent } from './shared/navbar.component';
+import { FooterComponent } from './shared/footer.component';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, RouterLink, NgIf],
+  imports: [RouterOutlet, NavbarComponent, FooterComponent],
   template: `
-  <nav style="display:flex;gap:12px;align-items:center;padding:12px;border-bottom:1px solid #eee">
-    <a routerLink="/" routerLinkActive="active">User</a>
-    <a routerLink="/admin" routerLinkActive="active">Admin</a>
-    <a *ngIf="!auth.isAuthenticated()" routerLink="/login" routerLinkActive="active">Login</a>
-    <button *ngIf="auth.isAuthenticated()" (click)="logout()">Logout</button>
-  </nav>
-  <router-outlet />
+    <app-navbar></app-navbar>
+    <main class="main-content">
+      <router-outlet />
+    </main>
+    <app-footer></app-footer>
   `,
   styleUrl: './app.css'
 })
 export class App {
   protected readonly title = signal('movie-frontend');
-  readonly auth = inject(AuthService);
-
-  logout() {
-    this.auth.logout();
-  }
 }

@@ -9,6 +9,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @RestController
@@ -82,5 +83,11 @@ public class MovieController {
     public ResponseEntity<Void> deleteBatch(@RequestBody List<Long> ids) {
         movieService.deleteBatch(ids);
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/stats")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<Map<String, Long>> getStats() {
+        return ResponseEntity.ok(movieService.getStats());
     }
 }

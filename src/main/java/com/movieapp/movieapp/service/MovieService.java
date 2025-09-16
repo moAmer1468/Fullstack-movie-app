@@ -62,6 +62,10 @@ public class MovieService {
             existing.setImdbId(updatedMovie.getImdbId());
             existing.setType(updatedMovie.getType());
             existing.setPosterUrl(updatedMovie.getPosterUrl());
+            existing.setGenre(updatedMovie.getGenre());
+            existing.setDirector(updatedMovie.getDirector());
+            existing.setActors(updatedMovie.getActors());
+            existing.setPlot(updatedMovie.getPlot());
             return movieRepository.save(existing);
         });
     }
@@ -106,6 +110,31 @@ public class MovieService {
         }
     }
 
+    // ✅ New Method: fetch detailed movie info from OMDB
+    public Movie fetchMovieDetails(String imdbId) {
+        try {
+            String apiUrl = omdbUrl + "?i=" + imdbId + "&apikey=" + omdbKey;
+            @SuppressWarnings("unchecked")
+            Map<String, String> response = restTemplate.getForObject(apiUrl, Map.class);
+            if (response == null || "False".equals(response.get("Response"))) {
+                throw new RuntimeException("Movie not found");
+            }
+            return Movie.builder()
+                    .title(response.get("Title"))
+                    .year(response.get("Year"))
+                    .imdbId(response.get("imdbID"))
+                    .type(response.get("Type"))
+                    .posterUrl(response.get("Poster"))
+                    .genre(response.get("Genre"))
+                    .director(response.get("Director"))
+                    .actors(response.get("Actors"))
+                    .plot(response.get("Plot"))
+                    .build();
+        } catch (Exception e) {
+            throw new RuntimeException("OMDB API error: " + e.getMessage());
+        }
+    }
+
     // ✅ New Method: fetch and save movies from OMDB
     public List<Movie> fetchAndSaveFromOmdb(String query) {
         List<Movie> fetchedMovies = searchOmdb(query); // use existing OMDB search
@@ -113,10 +142,18 @@ public class MovieService {
 
         for (Movie movie : fetchedMovies) {
             if (!movieRepository.existsByImdbId(movie.getImdbId())) {
-                savedMovies.add(movieRepository.save(movie));
+                // Fetch detailed info before saving
+                Movie detailedMovie = fetchMovieDetails(movie.getImdbId());
+                savedMovies.add(movieRepository.save(detailedMovie));
             }
         }
 
         return savedMovies;
+    }
+
+    public Map<String, Long> getStats() {
+        Map<String, Long> stats = new HashMap<>();
+        stats.put("totalMovies", movieRepository.count());
+        return stats;
     }
 }

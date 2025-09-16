@@ -11,6 +11,9 @@ export interface Movie {
   posterUrl?: string;
   plot?: string;
   type?: string;
+  genre?: string;
+  director?: string;
+  actors?: string;
 }
 
 export interface Page<T> {
@@ -70,6 +73,10 @@ export class MovieService {
 
   deleteBatch(ids: number[]): Observable<void> {
     return this.http.post<void>(`${environment.apiBaseUrl}/api/movies/delete-batch`, ids);
+  }
+
+  getStats(): Observable<{totalMovies: number}> {
+    return this.http.get<{totalMovies: number}>(`${environment.apiBaseUrl}/api/movies/stats`);
   }
 }
 
